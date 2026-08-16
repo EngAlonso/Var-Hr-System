@@ -1,0 +1,829 @@
+VAR HR — PROJECT TAKEOVER + CONTINUATION INSTRUCTIONS
+
+You are taking over an already-started VAR HR project from another coding agent.
+
+IMPORTANT:
+
+This is NOT a new project.
+
+The previous agent already analyzed the product architecture, created the application foundation, generated the product/API contract, started the frontend and backend implementation, and then reached its daily execution quota.
+
+You do NOT have access to the previous agent's conversation.
+
+Therefore:
+
+THE CURRENT CODEBASE IS THE SOURCE OF TRUTH.
+
+The information below is the previous agent's last known report and implementation context.
+
+You MUST verify it against the actual project before making changes.
+
+Do NOT restart the project.
+Do NOT rebuild completed architecture.
+Do NOT delete working implementation.
+Do NOT replace existing foundations simply because you would design them differently.
+
+==================================================
+PREVIOUS AGENT'S PRODUCT ARCHITECTURE REPORT
+==================================================
+
+VAR HR is a premium multilingual multi-tenant HR SaaS platform.
+
+The recommended architecture is a modular monolithic application rather than premature microservices.
+
+Core architectural direction:
+
+- React web application
+- Express API
+- PostgreSQL
+- Drizzle ORM
+- OpenAPI/API contract
+- Generated API types/hooks
+- Versioned attendance/payroll rules
+- Background jobs for asynchronous work
+- Append-only audit records
+- Object storage for files/reports
+- Centralized localization
+- Server-side authorization
+- Tenant-aware data access
+
+The main product domains are:
+
+- Identity and authentication
+- Tenants and company structure
+- Employees
+- Attendance
+- Leave
+- Permissions
+- Rules engine
+- Payroll
+- Biometric devices
+- GPS locations
+- Reports
+- Subscriptions
+- Notifications
+- Audit logs
+- Platform administration
+
+==================================================
+ROLES
+==================================================
+
+VAR HR has four primary user roles:
+
+1. Platform Owner
+2. Company Owner
+3. Manager
+4. Employee
+
+==================================================
+PLATFORM OWNER
+==================================================
+
+The Platform Owner is the owner/operator of VAR HR itself.
+
+The Platform Owner experience must be separate from customer company dashboards.
+
+It should eventually manage:
+
+- Companies
+- Subscriptions
+- Plans
+- Feature limits
+- Employee limits
+- Manager limits
+- Branch limits
+- Device limits
+- Storage limits
+- Platform analytics
+- System health
+- Support access
+- Audit logs
+- Platform settings
+- Company activation/suspension
+
+Support access must eventually be explicit, time-limited, and fully audited.
+
+==================================================
+COMPANY OWNER
+==================================================
+
+The Company Owner manages their own company.
+
+They should eventually manage:
+
+- Employees
+- Departments
+- Branches
+- Attendance
+- Leave
+- Permissions
+- Payroll
+- Attendance rules
+- Overtime
+- Biometric devices
+- GPS locations
+- Reports
+- Imports/exports
+- Subscription
+- Company settings
+
+==================================================
+MANAGER
+==================================================
+
+Managers have scoped access.
+
+A Manager may be scoped to:
+
+- Branches
+- Departments
+- Direct reports
+- Specific employees
+
+Depending on permissions, Managers may:
+
+- View team attendance
+- Review late arrivals
+- Review absences
+- Review overtime
+- Approve leave
+- Reject leave
+- Approve permissions
+- Reject permissions
+- View permitted reports
+
+The backend must enforce scope.
+
+==================================================
+EMPLOYEE
+==================================================
+
+Employees have personal self-service access.
+
+They should eventually see:
+
+- Personal profile
+- Check-in
+- Check-out
+- Current attendance status
+- Attendance history
+- Leave balance
+- Leave requests
+- Permission requests
+- Salary
+- Salary breakdown
+- Notifications
+
+Employees must never access other employees' private data.
+
+==================================================
+MULTI-TENANT ARCHITECTURE
+==================================================
+
+VAR HR is a true multi-tenant SaaS platform.
+
+Every company-scoped operational record must have an explicit company/tenant relationship.
+
+Tenant isolation must be enforced server-side.
+
+Never trust a companyId supplied by the frontend.
+
+Never rely only on hiding UI elements.
+
+Users must never access another company's:
+
+- Employees
+- Attendance
+- Payroll
+- Leave
+- Permissions
+- Devices
+- Reports
+- Settings
+- Subscription information
+
+==================================================
+PERMISSION MODEL
+==================================================
+
+Role-only authorization is not sufficient.
+
+The intended model is:
+
+User
+→ Membership
+→ Role
+→ Permissions
+→ Scope
+
+Permissions may include:
+
+- attendance.view
+- attendance.correct
+- leave.approve
+- payroll.view
+- payroll.approve
+- employees.manage
+- reports.export
+
+Scopes may include:
+
+- Entire company
+- Branch
+- Department
+- Direct reports
+- Specific employees
+
+Backend authorization is mandatory.
+
+==================================================
+SUBSCRIPTIONS
+==================================================
+
+VAR HR is a monthly SaaS product.
+
+Plans must be data-driven.
+
+Plans may define:
+
+- Active employee limit
+- Manager limit
+- Branch limit
+- Device limit
+- Storage limit
+- Feature access
+- Advanced reports
+- Payroll
+- GPS
+- Integrations
+- API access
+
+Do NOT hard-code plan limits.
+
+Active employees count toward limits.
+
+Deactivated employees remain available for historical records but should not count toward active employee limits.
+
+When a plan limit is reached:
+
+- Server blocks the operation.
+- UI explains the limit.
+- Upgrade path is shown.
+- Historical data remains available.
+
+==================================================
+ATTENDANCE
+==================================================
+
+Attendance should use an event-based model.
+
+Possible input sources:
+
+- Web check-in
+- Web check-out
+- Mobile check-in
+- Mobile check-out
+- GPS attendance
+- Biometric devices
+- Authorized manual corrections
+
+Processing:
+
+Raw event
+→ Normalize
+→ Validate
+→ Deduplicate
+→ Apply schedule/rules
+→ Calculate result
+→ Audit
+
+Raw attendance events should remain immutable.
+
+Corrections should create correction records instead of silently rewriting history.
+
+Attendance calculations should explain:
+
+- Scheduled start
+- Scheduled end
+- Actual check-in
+- Actual check-out
+- Late duration
+- Early departure
+- Worked duration
+- Overtime
+- Absence
+- Applied rule
+- Event source
+
+==================================================
+LEAVE
+==================================================
+
+Leave should use a balance ledger rather than a single editable number.
+
+Possible balance events:
+
+- Annual allocation
+- Carryover
+- Approved leave
+- Cancellation
+- Manual adjustment
+- Expiration
+- Policy change
+
+Lifecycle:
+
+Draft
+→ Submitted
+→ Under Review
+→ Approved
+→ Rejected
+→ Cancelled
+
+Approvals and rejections must be auditable.
+
+==================================================
+PERMISSIONS
+==================================================
+
+Permission requests are distinct from leave.
+
+Possible types:
+
+- Short absence
+- Late arrival
+- Early departure
+- Remote work
+- Personal errand
+- Company-defined types
+
+Permission types and approval requirements should be configurable.
+
+==================================================
+PAYROLL
+==================================================
+
+The initial payroll implementation should be a general calculation foundation.
+
+Support:
+
+- Basic salary
+- Additions
+- Deductions
+- Overtime
+- Attendance deductions
+- Salary breakdown
+- Payroll periods
+- Calculation history
+- Auditability
+
+Do NOT invent country-specific legal payroll rules yet.
+
+Do NOT implement taxes, insurance, or statutory rules without explicit country/business requirements.
+
+==================================================
+ATTENDANCE RULES ENGINE
+==================================================
+
+Rules should eventually be versioned and effective-dated.
+
+Possible rules:
+
+- Work start
+- Work end
+- Grace period
+- Late threshold
+- Early departure
+- Working days
+- Holidays
+- Shifts
+- Overtime
+- Rounding
+- Absence
+- Deductions
+- Permission treatment
+
+The calculation should eventually provide an explanation trace.
+
+Example:
+
+Applied company schedule.
+Applied department grace period.
+Employee checked in 18 minutes late.
+Grace period was 10 minutes.
+Late deduction applied.
+
+==================================================
+BIOMETRIC DEVICES
+==================================================
+
+Biometric devices must be integrated through an adapter/connector architecture.
+
+The system should eventually support:
+
+- Device connection
+- Connection testing
+- Attendance synchronization
+- Employee synchronization
+- Push employee to device
+- Update employee
+- Remove employee
+- Device health
+- Sync history
+- Errors
+- Retry handling
+
+Do NOT fake real hardware integrations.
+
+The first real hardware connector should only be implemented after the target manufacturer/protocol is explicitly selected.
+
+==================================================
+GPS ATTENDANCE
+==================================================
+
+GPS attendance should capture location during attendance actions.
+
+Support architecture for:
+
+- Branch locations
+- Geofences
+- Radius
+- Accuracy
+- Location validation
+- Location policies
+
+Do not implement continuous employee tracking by default.
+
+==================================================
+REPORTS
+==================================================
+
+Reports should eventually support:
+
+- Attendance
+- Absence
+- Late
+- Overtime
+- Leave
+- Permissions
+- Employees
+- Payroll
+
+Features:
+
+- Filters
+- Date ranges
+- Employee filters
+- Department filters
+- Branch filters
+- Preview
+- Printing
+- CSV export
+- Excel-compatible export
+
+==================================================
+AUDIT LOGS
+==================================================
+
+Sensitive actions should be auditable.
+
+Examples:
+
+- Employee changes
+- Salary changes
+- Attendance corrections
+- Leave decisions
+- Permission decisions
+- Payroll changes
+- Rules changes
+- Device changes
+- Subscription changes
+- Support access
+
+Audit records should identify:
+
+- Actor
+- Role
+- Company
+- Action
+- Entity
+- Timestamp
+- Before/after values where appropriate
+- Support mode when applicable
+
+==================================================
+LOCALIZATION
+==================================================
+
+VAR HR must support:
+
+- English
+- Arabic
+- French
+- German
+
+Arabic must support full RTL.
+
+English, French, and German use LTR.
+
+Localization must exist from the beginning.
+
+Do NOT hard-code user-facing strings.
+
+Dates, numbers, currencies, and time zones should eventually be locale-aware.
+
+Different users in the same company may use different languages.
+
+==================================================
+VISUAL DIRECTION
+==================================================
+
+VAR HR must look like a premium enterprise SaaS product.
+
+It should feel:
+
+- Premium
+- Sophisticated
+- Powerful
+- Precise
+- Reliable
+- Modern
+- Professional
+- Expensive
+- Mature
+
+Avoid:
+
+- Generic admin templates
+- Cheap CRUD dashboards
+- Excessive gradients
+- Random cards
+- Excessive rounded containers
+- Heavy shadows
+- Childish colors
+- Template-like interfaces
+- Decorative elements without purpose
+
+The VAR name is conceptually inspired by football's Video Assistant Referee:
+
+Review
+→ Analyze
+→ Decide
+
+This concept should influence the brand subtly.
+
+DO NOT turn the UI into a football-themed product.
+
+==================================================
+PREVIOUS AGENT'S ACTUAL IMPLEMENTATION STATUS
+==================================================
+
+The previous agent reported:
+
+1. The application shell was created.
+2. The real product/API contract was created.
+3. The contract generated successfully.
+4. A Zod 3 vs Zod 4 integer syntax compatibility problem was discovered and corrected.
+5. The frontend build started using the generated hooks.
+6. A tenant-aware backend foundation was implemented.
+7. Operational records were designed with company relationships.
+8. A replaceable workspace-context adapter was implemented instead of committing to a fake authentication provider.
+9. Backend structure was implemented.
+10. A seeded tenant was being used for validation.
+11. Initial typechecking was performed.
+12. Type mismatches were found between generated query date types and Drizzle calendar-date strings.
+13. One helper typing issue was also found.
+14. The previous agent was tightening those type boundaries.
+15. The previous agent intended to run the server against the seeded tenant.
+16. The previous agent then reached its daily execution quota.
+
+IMPORTANT:
+
+This is a report of the previous agent's last known state.
+
+Do NOT assume it is 100% accurate.
+
+VERIFY EVERYTHING against the actual project.
+
+==================================================
+AUTHENTICATION BOUNDARY
+==================================================
+
+The previous agent intentionally did NOT choose Clerk, Replit Auth, or another authentication provider.
+
+Instead, a replaceable workspace-context adapter was used so development could continue without inventing a production identity provider.
+
+Preserve this boundary.
+
+Do not introduce an authentication provider unless the existing project already contains one or there is an explicit requirement.
+
+==================================================
+FIRST RELEASE OPERATIONAL SLICE
+==================================================
+
+The first coherent implementation should be:
+
+Company onboarding
+→ Company Owner
+→ Employees
+→ Departments
+→ Branches
+→ Attendance
+→ Leave
+→ Permissions
+→ Basic attendance rules
+→ Basic reports
+→ Employee self-service
+→ Manager approvals
+
+Do not build disconnected demo screens.
+
+Use real API/data flows wherever the backend exists.
+
+==================================================
+TAKEOVER PROCEDURE
+==================================================
+
+YOUR FIRST TASK IS NOT TO BUILD FEATURES.
+
+First inspect the actual current project.
+
+Inspect:
+
+- Project structure
+- Git state if available
+- Package configuration
+- Database schema
+- Migrations
+- API contract
+- Generated types
+- Generated hooks
+- Backend routes
+- Backend services
+- Frontend routes
+- Frontend components
+- Workspace context
+- Localization
+- RTL/LTR
+- Seed data
+- Existing scripts
+- Existing validation configuration
+
+Then determine:
+
+1. What is already implemented.
+2. What is partially implemented.
+3. What is broken.
+4. What is missing.
+5. What the previous agent was most likely working on.
+
+==================================================
+VALIDATION
+==================================================
+
+After inspection, reproduce the current validation state.
+
+Run the appropriate existing:
+
+- Typecheck
+- Tests
+- Build
+- Database validation
+- API validation
+
+commands.
+
+Specifically verify whether these previously reported issues still exist:
+
+- Generated API query date types vs Drizzle calendar-date strings.
+- Helper typing issue.
+
+If they still exist, fix those first.
+
+Do not bypass them with unnecessary any casts.
+
+Do not silence errors.
+
+Do not weaken type safety.
+
+==================================================
+NEXT BACKEND VALIDATION
+==================================================
+
+Once the foundation typechecks:
+
+Run the backend against the seeded tenant/test data.
+
+Verify:
+
+- Tenant context
+- Company-scoped queries
+- Employee access
+- Basic API behavior
+- Authorization boundaries
+- Generated contract compatibility
+
+==================================================
+THEN CONTINUE IMPLEMENTATION
+==================================================
+
+After the foundation is stable, continue the first operational product slice.
+
+Prioritize:
+
+1. Company onboarding
+2. Company Owner workspace
+3. Employee management
+4. Departments
+5. Branches
+6. Attendance
+7. Leave
+8. Permissions
+9. Basic attendance rules
+10. Basic reports
+11. Employee self-service
+12. Manager approvals
+
+==================================================
+IMPORTANT IMPLEMENTATION RULES
+==================================================
+
+Do NOT:
+
+- Restart the project.
+- Rewrite completed architecture.
+- Replace generated contracts with handwritten duplicates.
+- Introduce fake authentication.
+- Introduce fake biometric integrations.
+- Invent legal payroll rules.
+- Hard-code subscription limits.
+- Use frontend-only authorization.
+- Create fake dashboard numbers.
+- Hide backend errors.
+- Silence type errors.
+- Build disconnected UI demos.
+- Copy existing HR products.
+
+DO:
+
+- Preserve existing working implementation.
+- Make minimal safe changes.
+- Keep tenant boundaries explicit.
+- Keep authorization server-side.
+- Keep integrations behind clean interfaces.
+- Keep localization centralized.
+- Keep RTL/LTR correct.
+- Keep the UI premium.
+- Keep the code type-safe.
+- Validate incrementally.
+
+==================================================
+IMPORTANT PRODUCT PRINCIPLE
+==================================================
+
+The philosophy of VAR HR is:
+
+"We start where others stopped."
+
+This does NOT mean copying competitors.
+
+Study existing HR systems only to understand:
+
+- Why features exist.
+- What workflows users expect.
+- Where users experience friction.
+- What can be simplified.
+- What can be improved.
+
+Then build VAR HR with its own logic, identity, UX, and visual language.
+
+==================================================
+FINAL TAKEOVER GOAL
+==================================================
+
+Your goal is NOT:
+
+REBUILD VAR HR.
+
+Your goal is:
+
+INSPECT
+→ VERIFY
+→ PRESERVE
+→ FIX
+→ CONTINUE
+
+Start by inspecting the actual current project and reproducing its current validation state.
+
+Then continue from the exact point where the previous implementation stopped.
+
+Do not assume the project is empty.
+
+Do not assume the previous work is broken.
+
+Do not assume the previous work is complete.
+
+Verify it.
+
+Then continue.
