@@ -1,0 +1,1393 @@
+You are now working on a new SaaS product called VAR HR.
+
+VAR HR is a premium SaaS platform for companies to manage their workforce, attendance, leave, permissions, biometric devices, payroll, attendance rules, employee records, reports, and subscriptions.
+
+The product must feel like a serious, premium, enterprise-grade platform from the first interaction.
+
+This is NOT intended to be a basic attendance system or a generic admin dashboard.
+
+The goal is to build a product that looks and feels expensive, mature, reliable, scalable, and professionally designed.
+
+==================================================
+1. PRODUCT PHILOSOPHY
+==================================================
+
+There is a principle behind this project:
+
+"We start where others stopped."
+
+This does NOT mean copying existing HR products.
+
+You should understand the strongest HR/HCM products in the market and study:
+
+- What problems they solve.
+- Why their workflows are designed the way they are.
+- Their strengths.
+- Their weaknesses.
+- Where users experience friction.
+- What can be simplified.
+- What can be improved.
+- What can be redesigned.
+- What should be approached completely differently.
+
+Then build VAR HR around its own product philosophy and design language.
+
+DO NOT copy existing products.
+
+Do not copy:
+
+- UI
+- Layouts
+- Branding
+- Visual identity
+- Copywriting
+- Components
+- Exact workflows
+- Navigation structures
+- Design patterns in a way that makes VAR HR look derivative
+
+Market research is encouraged for understanding products, problems, workflows, and industry standards.
+
+The final product must have its own identity and its own solutions.
+
+The objective is:
+
+Understand what already exists.
+Understand why it exists.
+Identify what can be improved.
+Then build VAR HR with our own thinking and design decisions.
+
+==================================================
+2. CORE PRODUCT
+==================================================
+
+The initial core of VAR HR should focus on:
+
+- Employee management
+- Attendance
+- Check-in / Check-out
+- GPS attendance
+- Leave management
+- Permission management
+- Attendance history
+- Biometric devices
+- Attendance rules
+- Overtime
+- Deductions
+- Additions
+- Payroll
+- Reports
+- Printing
+- Excel/CSV import and export
+- Employee accounts
+- Manager accounts
+- Company Owner accounts
+- Platform Owner accounts
+- Subscription management
+- Plan limits
+- Multi-tenant architecture
+
+The product should be modular and scalable so additional HR features can be introduced later without rebuilding the foundation.
+
+==================================================
+3. ATTENDANCE
+==================================================
+
+The system must support:
+
+- Employee check-in.
+- Employee check-out.
+- Attendance using the employee's current GPS location.
+- Complete attendance history.
+- Late arrival tracking.
+- Absence tracking.
+- Early departure tracking.
+- Working hours.
+- Overtime.
+- Shifts.
+- Attendance rules.
+- Different rules for different employees when required.
+- Different rules for different departments when required.
+- Different rules for different branches when required.
+- Attendance status tracking.
+- Attendance corrections where authorized.
+- Attendance audit history.
+
+The attendance experience should be clear and professional.
+
+Employees should immediately understand:
+
+- Whether they are currently checked in.
+- Their check-in time.
+- Their check-out time.
+- Their working duration.
+- Whether they are late.
+- Whether overtime is being recorded.
+- Their attendance history.
+
+Company administrators should be able to understand the attendance status of the entire workforce.
+
+==================================================
+4. GPS ATTENDANCE
+==================================================
+
+VAR HR must support attendance based on the employee's current location.
+
+The system should be able to:
+
+- Capture location when checking in.
+- Capture location when checking out.
+- Validate whether the employee is within an allowed location/geofence.
+- Store the relevant attendance/location information securely.
+- Allow companies to configure allowed attendance locations.
+- Support multiple branches or attendance locations.
+- Allow location rules to be configurable.
+
+Location rules must not be hard-coded.
+
+The architecture should allow future expansion into:
+
+- Multiple geofences.
+- Branch-specific attendance locations.
+- Location radius.
+- Location restrictions.
+- Location-based attendance policies.
+
+==================================================
+5. LEAVE & PERMISSIONS
+==================================================
+
+The system must support:
+
+- Multiple leave types.
+- Leave balances.
+- Employee leave requests.
+- Permission requests.
+- Approval workflows.
+- Rejection workflows.
+- Rejection reasons.
+- Request history.
+- Automatic leave balance updates.
+- Request statuses.
+- Notifications.
+- Manager approvals.
+
+The employee should be able to clearly understand:
+
+- What they requested.
+- When they requested it.
+- The request status.
+- Who approved or rejected it when appropriate.
+- Why it was rejected.
+- Their remaining leave balance.
+
+Company Owners should be able to configure leave types and policies.
+
+Managers should be able to approve or reject requests according to their permissions.
+
+==================================================
+6. BIOMETRIC ATTENDANCE DEVICES
+==================================================
+
+Biometric device integration is one of the important parts of VAR HR.
+
+The long-term goal is:
+
+VAR HR
+↕
+Biometric Devices
+
+The system must be designed from the beginning to support multiple biometric device manufacturers and models.
+
+DO NOT assume that every biometric device uses the same protocol.
+
+Create a clean abstraction/integration architecture that allows different device connectors or adapters to be added without redesigning the entire platform.
+
+The platform should eventually support:
+
+- Adding biometric devices.
+- Assigning devices to companies.
+- Assigning devices to branches.
+- Connecting devices.
+- Disconnecting devices.
+- Synchronizing devices.
+- Automatically pulling attendance records.
+- Synchronizing employees.
+- Adding employees to biometric devices from VAR HR.
+- Updating employee information on biometric devices.
+- Managing multiple biometric devices for one company.
+- Supporting different device manufacturers.
+- Supporting different device protocols through adapters/connectors.
+- Monitoring synchronization status.
+- Showing connection errors.
+- Showing last synchronization time.
+- Showing device health/status.
+
+The desired workflow is:
+
+Company Owner
+→ Employees
+→ Select Biometric Device
+→ Sync Employee
+→ Employee becomes available on device
+
+And:
+
+Biometric Device
+→ Attendance Record
+→ VAR HR
+→ Attendance Engine
+→ Rules Engine
+→ Payroll
+
+The user should NOT have to manually export attendance spreadsheets and upload them as the primary workflow.
+
+Manual import can still exist as a fallback.
+
+==================================================
+7. ATTENDANCE RULES ENGINE
+==================================================
+
+Attendance calculations must be driven by a proper rules engine.
+
+Do NOT hard-code business rules directly into UI components or scattered backend logic.
+
+Company administrators should be able to configure:
+
+- Work start time.
+- Work end time.
+- Working hours.
+- Grace period.
+- Late threshold.
+- Early departure rules.
+- Overtime rules.
+- Overtime start conditions.
+- Working days.
+- Holidays.
+- Shifts.
+- Different rules for branches.
+- Different rules for departments.
+- Different rules for employees when necessary.
+
+The system should automatically calculate:
+
+Attendance
+→ Late
+→ Early Leave
+→ Absence
+→ Overtime
+→ Deductions
+→ Additions
+
+Calculations must be explainable.
+
+Do not show only a final number.
+
+For example:
+
+Basic Salary: 10,000
+Overtime: +500
+Late Deductions: -150
+Absence Deductions: -300
+Other Additions: +200
+
+Net Salary: 10,250
+
+The user must be able to understand exactly how the system arrived at the final amount.
+
+==================================================
+8. PAYROLL
+==================================================
+
+VAR HR should have a scalable payroll engine.
+
+Salary must not be treated as a single static number.
+
+The system should support:
+
+- Basic salary.
+- Allowances.
+- Bonuses.
+- Overtime.
+- Deductions.
+- Late deductions.
+- Absence deductions.
+- Permission-related deductions according to company rules.
+- Other additions.
+- Other deductions.
+
+The system should automatically calculate net salary.
+
+Each employee should have a clear salary breakdown.
+
+Payroll calculations must be:
+
+- Traceable.
+- Explainable.
+- Auditable.
+- Connected to attendance rules.
+- Connected to overtime.
+- Connected to deductions and additions.
+
+A company administrator should be able to understand how an employee's final salary was calculated.
+
+==================================================
+9. REPORTS
+==================================================
+
+The system must support:
+
+- Preview.
+- Printing.
+- Export.
+- Import.
+- Excel.
+- CSV.
+
+Reports should be available at both employee and company levels.
+
+Individual employee report:
+
+- Employee information.
+- Attendance.
+- Check-in/out records.
+- Late records.
+- Absence.
+- Leave.
+- Permissions.
+- Overtime.
+- Deductions.
+- Additions.
+- Salary.
+- Salary breakdown.
+
+Company-wide reports:
+
+- Attendance report.
+- Absence report.
+- Late report.
+- Overtime report.
+- Leave report.
+- Permission report.
+- Payroll report.
+- Employee report.
+
+Reports should be professional enough to be printed and used by real companies.
+
+The reporting experience should include:
+
+- Filters.
+- Date ranges.
+- Employee filters.
+- Department filters.
+- Branch filters.
+- Status filters where appropriate.
+- Preview.
+- Print.
+- Export.
+
+==================================================
+10. USER ROLES
+==================================================
+
+VAR HR is a multi-tenant SaaS platform.
+
+There are four primary account levels:
+
+1. Platform Owner
+2. Company Owner
+3. Manager
+4. Employee
+
+==================================================
+11. PLATFORM OWNER
+==================================================
+
+The Platform Owner is the owner of the VAR HR platform itself.
+
+This is NOT a customer company account.
+
+The Platform Owner should have a separate platform administration experience.
+
+The Platform Owner should be able to manage:
+
+- All companies.
+- Companies' subscriptions.
+- Plans.
+- Plan limits.
+- Employee limits.
+- Manager limits.
+- Branch limits.
+- Device limits.
+- Storage limits.
+- Features.
+- Platform settings.
+- Platform analytics.
+- System health.
+- Support tools.
+- Logs.
+- Platform configuration.
+- Subscription status.
+- Company status.
+- Company onboarding.
+- Company suspension when required.
+- Company activation.
+- Billing-related configuration.
+
+The Platform Owner dashboard should feel like the control center of a serious SaaS company.
+
+It should NOT look like the same dashboard used by customers.
+
+==================================================
+12. COMPANY OWNER
+==================================================
+
+The Company Owner is the customer who subscribes to VAR HR.
+
+The Company Owner manages their own company according to their subscription plan.
+
+They should be able to manage:
+
+- Employees.
+- Managers.
+- Departments.
+- Branches.
+- Attendance.
+- Leave.
+- Permissions.
+- Payroll.
+- Biometric devices.
+- GPS attendance.
+- Attendance rules.
+- Overtime rules.
+- Reports.
+- Import/export.
+- Company settings.
+- Subscription.
+- Company profile.
+
+The Company Owner must never be able to access another company's data.
+
+==================================================
+13. MANAGER
+==================================================
+
+A Manager belongs to a customer company.
+
+The Manager should only see employees and data within their permitted scope.
+
+Depending on permissions, a Manager may be able to:
+
+- View team attendance.
+- Review late arrivals.
+- Review absences.
+- Review overtime.
+- Review leave requests.
+- Review permission requests.
+- Approve leave requests.
+- Reject leave requests.
+- Approve permissions.
+- Reject permissions.
+- View permitted reports.
+- Monitor team status.
+
+Do not assume that every Manager can access everything.
+
+The permission system must support scoped access.
+
+==================================================
+14. EMPLOYEE
+==================================================
+
+Employees have their own accounts.
+
+An employee should be able to view:
+
+- Personal profile.
+- Attendance.
+- Check-in.
+- Check-out.
+- GPS attendance information where appropriate.
+- Leave balance.
+- Leave requests.
+- Permission requests.
+- Salary.
+- Salary breakdown.
+- Attendance history.
+- Notifications.
+
+Employees must not be able to see private information belonging to other employees.
+
+==================================================
+15. SUBSCRIPTION MODEL
+==================================================
+
+VAR HR is a monthly subscription SaaS platform.
+
+Every company is a tenant with an active subscription plan.
+
+The Platform Owner must be able to create and manage subscription plans.
+
+Plans may define:
+
+- Maximum active employees.
+- Maximum managers.
+- Maximum branches.
+- Maximum biometric devices.
+- Storage.
+- Available features.
+- Advanced reports.
+- Payroll.
+- GPS attendance.
+- Integrations.
+- API access.
+
+Example plans:
+
+Starter
+10 employees
+
+Basic
+25 employees
+
+Business
+50 employees
+
+Pro
+100 employees
+
+Enterprise
+Custom
+
+These are examples only.
+
+DO NOT hard-code these numbers.
+
+The Platform Owner must be able to create and configure plans dynamically.
+
+==================================================
+16. EMPLOYEE LIMITS
+==================================================
+
+Employee limits must be based on ACTIVE employees.
+
+Example:
+
+49 / 50 Active Employees
+
+When the Company Owner tries to add employee number 51:
+
+The system must prevent the operation and display a premium upgrade flow.
+
+Example:
+
+"Your current plan supports up to 50 active employees."
+
+"Upgrade your plan to add more employees."
+
+If an employee is deactivated:
+
+48 / 50
+
+The company can add another active employee.
+
+However:
+
+DO NOT permanently delete deactivated employees by default.
+
+Historical:
+
+- Attendance.
+- Payroll.
+- Leave.
+- Permissions.
+- Reports.
+- Audit records.
+
+must remain available.
+
+==================================================
+17. MULTI-TENANT ARCHITECTURE
+==================================================
+
+VAR HR must be designed as a true multi-tenant SaaS platform from the beginning.
+
+Each company is an independent tenant.
+
+Company A must never be able to access:
+
+- Company B employees.
+- Company B attendance.
+- Company B payroll.
+- Company B devices.
+- Company B reports.
+- Company B configuration.
+- Company B subscriptions.
+- Company B private information.
+
+Tenant isolation must be enforced at the architecture and data-access level.
+
+Do not rely only on hiding UI elements.
+
+Every company-scoped entity must have a clear tenant/company relationship.
+
+Authorization must validate tenant context.
+
+==================================================
+18. PLATFORM OWNER SUPPORT ACCESS
+==================================================
+
+The Platform Owner has a higher-level role, but unrestricted access to employee data should NOT be the default workflow.
+
+If platform support requires temporary access to a customer company, create a controlled mechanism such as:
+
+Support Access
+or
+Impersonation / Support Mode
+
+This must be:
+
+- Explicit.
+- Audited.
+- Logged.
+- Traceable.
+- Secure.
+
+Example:
+
+Platform Owner entered Company X Support Mode — 14:32
+Viewed attendance configuration
+Viewed device connection status
+Exited Support Mode — 14:37
+
+All relevant actions should be recorded in an audit log.
+
+This is important because VAR HR will handle sensitive employee and salary information.
+
+==================================================
+19. MULTI-LANGUAGE & LOCALIZATION
+==================================================
+
+VAR HR must be multilingual from the beginning.
+
+The application must support four languages:
+
+1. Arabic
+2. English
+3. French
+4. German
+
+There must be a clear and accessible language switcher in the application.
+
+The language selector should feel like a natural part of the premium interface.
+
+It should not look like an afterthought.
+
+Users should be able to switch languages without losing their current page, form data, filters, or context whenever technically possible.
+
+==================================================
+20. RTL / LTR
+==================================================
+
+Arabic must support full RTL.
+
+English, French, and German must support LTR.
+
+When Arabic is selected:
+
+- The entire interface must switch to RTL.
+- Navigation must correctly mirror.
+- Sidebars must correctly mirror.
+- Forms must correctly align.
+- Tables must remain readable.
+- Directional icons should mirror when appropriate.
+- Spacing must remain visually balanced.
+- Modals must support RTL.
+- Dropdowns must support RTL.
+- Charts and data visualizations must remain usable.
+- Text alignment must be correct.
+- Layouts must not break.
+
+When English, French, or German is selected:
+
+- The interface must switch to LTR.
+- The layout must return to the correct LTR structure.
+
+RTL must NOT be treated as a later adaptation.
+
+Arabic must be considered during the original design and component architecture.
+
+==================================================
+21. LOCALIZATION ARCHITECTURE
+==================================================
+
+Do NOT hard-code user-facing strings throughout the application.
+
+All user-facing text must come from the localization system.
+
+This includes:
+
+- Navigation.
+- Buttons.
+- Forms.
+- Validation messages.
+- Notifications.
+- Empty states.
+- Error messages.
+- Success messages.
+- Table headers.
+- Filters.
+- Reports.
+- Payroll labels.
+- Attendance labels.
+- Leave labels.
+- Permission labels.
+- Settings.
+- Subscription pages.
+- Authentication.
+- Onboarding.
+- System messages.
+- Confirmation dialogs.
+- Tooltips.
+- Help text.
+
+The localization architecture must make it easy to add additional languages in the future.
+
+==================================================
+22. LANGUAGE PERSISTENCE
+==================================================
+
+The selected language should persist.
+
+If a user selects Arabic and logs out and later logs back in, Arabic should remain their preferred language.
+
+For authenticated users, language preference should ideally be associated with their account/profile.
+
+For unauthenticated users, use appropriate local persistence.
+
+Different users within the same company should be able to use different languages.
+
+For example:
+
+Company Owner → Arabic
+Manager → English
+Employee → French
+
+Do not force every user in the company to use the same language unless we explicitly decide to add a company-wide default language later.
+
+==================================================
+23. LOCALIZATION QUALITY
+==================================================
+
+Do not use awkward literal translations.
+
+The interface should feel professionally written in every language.
+
+Arabic should be natural, professional business Arabic.
+
+French should feel natural and professional.
+
+German should feel natural and professional.
+
+English should be professional SaaS/enterprise product language.
+
+Do not expose technical translation keys to users.
+
+Do not mix languages accidentally.
+
+==================================================
+24. MULTILINGUAL DESIGN TESTING
+==================================================
+
+The design system must be tested in all four languages.
+
+Pay special attention to:
+
+- Arabic RTL.
+- Long French labels.
+- Long German labels.
+- Button widths.
+- Table headers.
+- Navigation labels.
+- Form labels.
+- Dialog content.
+- Empty states.
+- Notifications.
+- Cards.
+- Charts.
+- Mobile/responsive layouts.
+
+Do not design the English interface and assume other languages will automatically fit.
+
+Components must accommodate different text lengths.
+
+The layout must remain professional and stable across all four languages.
+
+==================================================
+25. VISUAL DIRECTION
+==================================================
+
+This is extremely important.
+
+VAR HR must NOT look like a cheap admin template.
+
+When someone opens the platform, the immediate impression should be:
+
+"This is a serious enterprise product."
+
+The UI should feel:
+
+- Premium.
+- Modern.
+- Sophisticated.
+- Clean.
+- Confident.
+- Professional.
+- High-end SaaS.
+- Spacious.
+- Highly structured.
+- Refined.
+- Reliable.
+- Expensive.
+- Mature.
+
+The visual hierarchy must be extremely strong.
+
+Typography must feel intentional.
+
+Tables must feel premium.
+
+Forms must feel polished.
+
+Charts must feel purposeful.
+
+Spacing must feel deliberate.
+
+Interactions must feel smooth.
+
+==================================================
+26. WHAT TO AVOID VISUALLY
+==================================================
+
+Avoid:
+
+- Generic admin templates.
+- Bootstrap-looking dashboards.
+- Cheap-looking CRUD interfaces.
+- Excessive gradients.
+- Too many colors.
+- Random cards.
+- Excessive rounded corners.
+- Heavy shadows.
+- Random icon styles.
+- Inconsistent typography.
+- Cluttered layouts.
+- Overuse of glassmorphism.
+- Childish colors.
+- Excessive animations.
+- Decorative elements with no purpose.
+- UI that looks like a template purchased online.
+
+Do not add visual effects just to make the UI look "fancy".
+
+Premium design comes from:
+
+- Hierarchy.
+- Typography.
+- Spacing.
+- Consistency.
+- Information architecture.
+- Interaction quality.
+- Restraint.
+- Detail.
+
+==================================================
+27. BRAND PERSONALITY
+==================================================
+
+VAR HR should feel:
+
+POWERFUL
+PRECISE
+RELIABLE
+INTELLIGENT
+PROFESSIONAL
+
+It should NOT feel:
+
+CHEAP
+GENERIC
+BASIC
+CHILDISH
+OVERLY PLAYFUL
+LIKE A SMALL CRUD APPLICATION
+
+The product should feel credible to a serious company paying a monthly subscription.
+
+The visual language should communicate value before the user even understands every feature.
+
+==================================================
+28. VAR BRAND CONCEPT
+==================================================
+
+The name VAR is inspired by the Video Assistant Referee in football.
+
+The conceptual connection is:
+
+When a decision is unclear:
+
+REVIEW
+→
+ANALYZE
+→
+DECIDE
+
+VAR HR helps management review the relevant data, understand what happened, and make better decisions.
+
+This concept should influence the brand personality subtly.
+
+DO NOT turn the entire application into a football-themed interface.
+
+Do not use football graphics throughout the dashboard.
+
+Do not use football imagery as a UI gimmick.
+
+The football connection should primarily exist as the story behind the name.
+
+==================================================
+29. INFORMATION ARCHITECTURE
+==================================================
+
+Do not build random screens.
+
+Before implementation, establish a strong information architecture.
+
+The system should clearly separate:
+
+Platform Administration
+Company Administration
+Management
+Employee Self-Service
+
+Each role should have a navigation structure appropriate to its responsibilities.
+
+Do not show users irrelevant sections.
+
+The navigation should feel simple even though the platform itself is powerful.
+
+The complexity should be organized, not exposed all at once.
+
+==================================================
+30. DASHBOARD PHILOSOPHY
+==================================================
+
+Dashboards should not simply contain random cards showing numbers.
+
+Each dashboard should answer:
+
+"What does this user need to know right now?"
+
+For example, a Company Owner may need:
+
+- Today's attendance.
+- Late employees.
+- Absent employees.
+- Pending leave requests.
+- Overtime.
+- Payroll status.
+- Device synchronization status.
+- Subscription usage.
+- Important alerts.
+
+A Manager may need:
+
+- Team attendance.
+- Pending approvals.
+- Late employees.
+- Absences.
+- Team overtime.
+
+An Employee may need:
+
+- Today's attendance status.
+- Check-in/out.
+- Leave balance.
+- Pending requests.
+- Salary information.
+- Recent notifications.
+
+The dashboard must prioritize actionable information.
+
+==================================================
+31. DATA VISUALIZATION
+==================================================
+
+Charts should only be used when they communicate useful information.
+
+Examples:
+
+- Attendance trends.
+- Absence trends.
+- Overtime trends.
+- Workforce distribution.
+- Payroll summaries.
+- Leave usage.
+
+Do not add charts just to make the dashboard look impressive.
+
+Every chart should answer a real question.
+
+==================================================
+32. RESPONSIVE DESIGN
+==================================================
+
+VAR HR must be responsive.
+
+The design should work professionally across:
+
+- Desktop.
+- Laptop.
+- Tablet.
+- Mobile web.
+
+Do not simply shrink the desktop layout.
+
+Responsive behavior must be intentional.
+
+Tables, navigation, forms, dashboards, filters, reports, and dialogs must all have proper responsive behavior.
+
+Arabic RTL must also work correctly across responsive breakpoints.
+
+==================================================
+33. ACCESSIBILITY
+==================================================
+
+Build a professional accessibility foundation.
+
+Consider:
+
+- Keyboard navigation.
+- Focus states.
+- Contrast.
+- Labels.
+- Form accessibility.
+- Semantic structure.
+- Screen reader compatibility where appropriate.
+- Clear validation messages.
+- Avoiding color-only communication.
+
+Accessibility must not compromise the premium visual design.
+
+==================================================
+34. AUDITABILITY
+==================================================
+
+Because VAR HR manages attendance, approvals, payroll, and employee data, important actions should be auditable.
+
+Consider audit logs for:
+
+- Employee changes.
+- Salary changes.
+- Attendance corrections.
+- Leave approvals.
+- Leave rejections.
+- Permission approvals.
+- Permission rejections.
+- Payroll changes.
+- Rule changes.
+- Device changes.
+- Subscription changes.
+- Platform Owner support access.
+
+Audit information should clearly identify:
+
+- Who performed the action.
+- What changed.
+- When it happened.
+- Which company it affected.
+- Relevant before/after values where appropriate.
+
+==================================================
+35. SECURITY PRINCIPLE
+==================================================
+
+Security must be treated as a core product requirement.
+
+Pay special attention to:
+
+- Tenant isolation.
+- Role-based access control.
+- Permission boundaries.
+- Sensitive salary data.
+- Employee data.
+- Location data.
+- Authentication.
+- Session management.
+- Audit logs.
+- Platform Owner access.
+
+Never rely only on frontend restrictions.
+
+Authorization must be enforced server-side.
+
+==================================================
+36. PRODUCT ARCHITECTURE BEFORE IMPLEMENTATION
+==================================================
+
+Do not immediately implement the entire product.
+
+First understand and structure:
+
+- Product architecture.
+- Information architecture.
+- User roles.
+- Permissions.
+- Tenant model.
+- Subscription model.
+- Attendance model.
+- Leave model.
+- Permission model.
+- Payroll model.
+- Biometric integration model.
+- Rules engine.
+- Reporting model.
+- Audit model.
+- Localization architecture.
+
+Then establish:
+
+Information Architecture
+→
+Navigation
+→
+User Flows
+→
+Data Model
+→
+Permission Model
+→
+UX
+→
+Design System
+→
+UI
+→
+Implementation
+
+==================================================
+37. IMPORTANT PRODUCT PRINCIPLE
+==================================================
+
+Do not make assumptions simply because another HR product does something a certain way.
+
+If you research:
+
+- Workday
+- SAP SuccessFactors
+- Oracle HCM
+- BambooHR
+- Rippling
+- Deel
+- Other HR/HCM systems
+
+the goal is to understand:
+
+"Why does this feature exist?"
+
+not:
+
+"How can we copy this feature?"
+
+We are building VAR HR with our own product decisions.
+
+The final product must feel like it was intentionally designed for VAR HR.
+
+==================================================
+38. DESIGN SYSTEM
+==================================================
+
+Before building a large number of screens, establish a coherent design system.
+
+Define and consistently use:
+
+- Typography.
+- Font hierarchy.
+- Colors.
+- Backgrounds.
+- Borders.
+- Radius.
+- Shadows.
+- Buttons.
+- Inputs.
+- Selects.
+- Dropdowns.
+- Tables.
+- Cards.
+- Tabs.
+- Badges.
+- Alerts.
+- Toasts.
+- Modals.
+- Drawers.
+- Navigation.
+- Sidebars.
+- Pagination.
+- Filters.
+- Date pickers.
+- Empty states.
+- Loading states.
+- Skeletons.
+- Error states.
+
+The design system must support:
+
+- LTR.
+- RTL.
+- English.
+- Arabic.
+- French.
+- German.
+- Responsive layouts.
+
+Do not allow every page to invent its own styling.
+
+==================================================
+39. USER EXPERIENCE PRINCIPLE
+==================================================
+
+The system can be powerful without feeling complicated.
+
+Organize complexity behind:
+
+- Clear navigation.
+- Progressive disclosure.
+- Smart defaults.
+- Good filtering.
+- Contextual actions.
+- Clear status indicators.
+- Consistent terminology.
+- Helpful empty states.
+- Helpful error states.
+- Clear confirmation flows.
+
+Users should not feel overwhelmed simply because the platform contains many features.
+
+==================================================
+40. WHAT I WANT FROM YOU FIRST
+==================================================
+
+At this stage, DO NOT immediately implement the entire product.
+
+First provide a structured analysis of the requirements.
+
+I want you to identify:
+
+1. Product architecture.
+2. Information architecture.
+3. Navigation structure for every role.
+4. Core data entities.
+5. Permission model.
+6. Multi-tenant architecture.
+7. Subscription and plan model.
+8. Attendance architecture.
+9. Leave architecture.
+10. Permission architecture.
+11. Payroll architecture.
+12. Attendance rules engine architecture.
+13. Biometric device abstraction/integration architecture.
+14. GPS attendance architecture.
+15. Reporting architecture.
+16. Audit architecture.
+17. Platform Owner architecture.
+18. Company Owner architecture.
+19. Manager architecture.
+20. Employee architecture.
+21. Localization architecture.
+22. RTL/LTR architecture.
+23. Design-system direction.
+24. Recommended first screens to build.
+25. Recommended implementation order.
+26. Any missing requirements or business decisions.
+
+Do not silently invent important business rules.
+
+If something requires a product/business decision, clearly label it:
+
+DECISION NEEDED
+
+and explain the available options and their implications.
+
+==================================================
+41. IMPLEMENTATION PRINCIPLE
+==================================================
+
+Once the architecture is approved, implementation should be incremental.
+
+Do not build everything blindly in one pass.
+
+Build in logical phases.
+
+Each phase should be:
+
+- Functional.
+- Type-safe.
+- Responsive.
+- Accessible.
+- Localized.
+- RTL-compatible.
+- Consistent with the design system.
+- Tested.
+
+Do not create temporary shortcuts that will become permanent architecture problems.
+
+==================================================
+42. FINAL PRODUCT STANDARD
+==================================================
+
+The final VAR HR experience should make a company owner feel:
+
+"This is a serious platform."
+
+"It is organized."
+
+"It understands my company."
+
+"It saves me work."
+
+"It gives me control."
+
+"It is worth paying for."
+
+The product must not feel like:
+
+"A simple attendance website."
+
+It should feel like a complete, professional SaaS business product.
+
+Build with the mindset that VAR HR can eventually serve hundreds or thousands of companies.
+
+Think about scalability from the beginning.
+
+Think about maintainability.
+
+Think about security.
+
+Think about localization.
+
+Think about tenant isolation.
+
+Think about the user experience.
+
+Think about the brand.
+
+And most importantly:
+
+Do not copy what others built.
+
+Understand what they built.
+
+Then build VAR HR with its own logic, its own personality, and its own visual identity.
+
+The goal is not to look like Workday.
+
+The goal is to make VAR HR strong enough that it can eventually stand beside products like it.
