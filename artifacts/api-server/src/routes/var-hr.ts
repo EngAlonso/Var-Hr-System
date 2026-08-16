@@ -85,7 +85,7 @@ import {
 const router: IRouter = Router();
 const TODAY = "2026-08-16";
 
-function calendarDate(value: Date | string | undefined): string | undefined {
+function calendarDate(value: Date | string | null | undefined): string | undefined {
   if (!value) return undefined;
   return value instanceof Date ? value.toISOString().slice(0, 10) : value;
 }
@@ -134,7 +134,7 @@ function employeeResponse(row: Awaited<ReturnType<typeof employeeRows>>[number])
     },
     status: row.employee.status as "active" | "inactive",
     role: row.employee.role as "employee" | "manager",
-    joinedOn: row.employee.joinedOn,
+    joinedOn: calendarDate(row.employee.joinedOn)!,
     salary: row.employee.salary,
     avatarInitials: initials(row.employee.firstName, row.employee.lastName),
   };
