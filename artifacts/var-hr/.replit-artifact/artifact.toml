@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "VAR HR"
+description = "A premium multilingual workforce platform for company owners, managers, employees, and platform operators to manage people, attendance, leave, permissions, rules, reports, payroll foundations, and tenant operations."
+version = "1.0.0"
+id = "artifacts/var-hr"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22077
+
+[services.development]
+run = "pnpm --filter @workspace/var-hr run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/var-hr", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/var-hr/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22077"
+BASE_PATH = "/"
